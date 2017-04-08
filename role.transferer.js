@@ -4,7 +4,7 @@ var roleTransferer = {
     run: function(creep) {
         if (creep.carry.energy === 0) {
         	var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: function (s) {
-                return s.structureType === STRUCTURE_SPAWN && structure.energy > structure.energyCapacity - 100;
+                return s.structureType === STRUCTURE_SPAWN && s.energy > s.energyCapacity - 100;
             }});
 
 			if(spawn && spawn.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
