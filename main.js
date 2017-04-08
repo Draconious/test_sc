@@ -2,6 +2,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleBuilder = require('role.builder');
 var roleRepairer = require('role.repairer');
+var roleTransferer = require('role.transferer');
 
 module.exports.loop = function () {
     for(var i in Memory.creeps) {
@@ -35,6 +36,7 @@ module.exports.loop = function () {
     var builders = [];
     var upgraders = [];
     var repairers = [];
+    var transferers = [];
 
     if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energy === 300) {
 
@@ -51,6 +53,9 @@ module.exports.loop = function () {
             if (Game.creeps[i].memory.role === 'repairer') {
                 repairers.push(Game.creeps[i]);
             }
+            if (Game.creeps[i].memory.role === 'transferer') {
+                transferers.push(Game.creeps[i]);
+            }
         }
 
         if(harvesters.length < 3) {
@@ -66,6 +71,9 @@ module.exports.loop = function () {
         } else if (repairers.length < 1) {
             console.log("Create repairer, source " + (repairers.length > 0 && repairers[repairers.length - 1].memory.source === 0 ? 1 : 0));
             Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'repairer', source: (repairers.length > 0 && repairers[repairers.length - 1].memory.source === 0 ? 1 : 0)});
+        } else if (transferers.length < 1) {
+            console.log("Create transferer, source " + (transferers.length > 0 && transferers[transferers.length - 1].memory.source === 0 ? 1 : 0));
+            Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'transferer', source: (transferers.length > 0 && transferers[transferers.length - 1].memory.source === 0 ? 1 : 0)});
         }
     }
 
@@ -82,6 +90,9 @@ module.exports.loop = function () {
         }
         if(creep.memory.role === 'repairer') {
             roleRepairer.run(creep);
+        }
+        if(creep.memory.role === 'transferer') {
+            roleTransferer.run(creep);
         }
     }
 };
