@@ -53,13 +53,14 @@ module.exports.loop = function () {
             }
         }
 
-        if(harvesters.length < 5) {
+        if(harvesters.length < 3) {
             console.log("Create harvester, source " + (harvesters.length > 0 && harvesters[harvesters.length - 1].memory.source === 0 ? 1 : 0));
             Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'harvester', source: (harvesters.length > 0 && harvesters[harvesters.length - 1].memory.source === 0 ? 1 : 0)});
-        } else if (upgraders.length < 3) {
+        } else if (upgraders.length < 2) {
             console.log("Create upgrader, source " + (upgraders.length > 0 && upgraders[upgraders.length - 1].memory.source === 0 ? 1 : 0));
-            Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'upgrader', source: (upgraders.length > 0 && upgraders[upgraders.length - 1].memory.source === 0 ? 1 : 0)});
-        } else if (builders.length < 4) {
+            //Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'upgrader', source: (upgraders.length > 0 && upgraders[upgraders.length - 1].memory.source === 0 ? 1 : 0)});
+            Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'upgrader', source: 1});
+        } else if (builders.length < 2) {
             console.log("Create builder, source " + (builders.length > 0 && builders[builders.length - 1].memory.source === 0 ? 1 : 0));
             Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'builder', source: (builders.length > 0 && builders[builders.length - 1].memory.source === 0 ? 1 : 0)});
         } else if (repairers.length < 1) {
