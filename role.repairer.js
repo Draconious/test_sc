@@ -24,7 +24,7 @@ var roleRepairer = {
 			if(toRepair.length) {
 				var structure = toRepair[0];
                 if(creep.repair(structure) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structure, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(structure, {visualizePathStyle: {stroke: '#FFFF00'}});
                 }
 
                 creep.memory.repairing = true;
@@ -35,7 +35,7 @@ var roleRepairer = {
 
 			if(closestConstruction) {
                 if(creep.build(closestConstruction) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestConstruction, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(closestConstruction, {visualizePathStyle: {stroke: '#FF00FF'}});
                 }
 
                 creep.memory.repairing = true;

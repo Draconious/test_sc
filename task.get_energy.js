@@ -10,7 +10,7 @@ var taskGetEnergy = {
 
                 if (container) {
                     if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(container)
+                        creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
                     }
                 } else {
                     var energyStructures = creep.pos.findClosestByPath(FIND_STRUCTURES, {
@@ -18,7 +18,7 @@ var taskGetEnergy = {
                     });
 
                     if (creep.withdraw(energyStructures) === ERR_NOT_IN_RANGE) {
-                        creep.moveTo(energyStructures)
+                        creep.moveTo(energyStructures, {visualizePathStyle: {stroke: '#FF0000'}});
                     }
                 }
             } else {
@@ -27,7 +27,7 @@ var taskGetEnergy = {
                 });
 
                 if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(container)
+                    creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
                 }
             }
 	}
