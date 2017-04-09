@@ -1,5 +1,6 @@
 var taskWork = require('task.work');
 var taskPopulate = require('task.populate');
+var roomName = "E8S92";
 
 module.exports.loop = function () {
     for (var i in Memory.creeps) {
@@ -8,7 +9,7 @@ module.exports.loop = function () {
         }
     }
 
-    var towers = Game.rooms["E8S92"].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
+    var towers = Game.rooms[roomName].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
 
     for (var id in towers) {
@@ -29,22 +30,35 @@ module.exports.loop = function () {
         }
     }
 
-    if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energy >= 300) {
+    if (!Game.spawns.Spawn1.spawning && Game.rooms[roomName].energyAvailable >= 300) {
         taskPopulate.run();
     }
 
 
-    var harvesters = [];
+    var harvesters = 0;
+    var upgraders = 0;
+    var repairers = 0;
+    var transferers = 0;
 
     for (var i in Game.creeps) {
         if (Game.creeps[i].memory.role === 'harvester') {
-            harvesters.push(Game.creeps[i]);
+            harvesters++;
+        }
+        if (Game.creeps[i].memory.role === 'upgrader') {
+            upgraders++;
+        }
+        if (Game.creeps[i].memory.role === 'repairer') {
+            repairers++;
+        }
+        if (Game.creeps[i].memory.role === 'transferer') {
+            transferers++;
         }
     }
 
-    if (harvesters.length < 5) {
+    if (harvesters < 5) {
         console.log("Brain drain!!");
     }
-    taskWork.run(harvesters.length < 5);
+
+    taskWork.run(harvesters.length < 5 || upgraders < 3 || repairers < 3 || transferers < 3);
 
 };
