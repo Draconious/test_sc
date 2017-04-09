@@ -33,7 +33,16 @@ module.exports.loop = function () {
         taskPopulate.run();
     }
 
-    taskWork.run();
+
+        var harvesters = [];
+
+        for(var i in Game.creeps) {
+            if (Game.creeps[i].memory.role === 'harvester') {
+                harvesters.push(Game.creeps[i]);
+            }
+        }
+
+    taskWork.run(harvesters.length < 5);
 
 
 };

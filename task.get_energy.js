@@ -14,10 +14,10 @@ var taskGetEnergy = {
                     }
                 } else {
                     var energyStructures = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                        filter: (s) => (s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION) && s.energy > 0
+                        filter: (s) => (s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION) && s.energy >= 50
                     });
 
-                    if (creep.withdraw(energyStructures) === ERR_NOT_IN_RANGE) {
+                    if (energyStructures.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
                         creep.moveTo(energyStructures, {visualizePathStyle: {stroke: '#FF0000'}});
                     }
                 }

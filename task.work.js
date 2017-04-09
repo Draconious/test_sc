@@ -5,18 +5,24 @@ var roleTransferer = require('role.transferer');
 
 var taskWork = {
 
-    run: function() {
+    run: function(needHarvesters) {
         for(var name in Game.creeps) {
             var creep = Game.creeps[name];
 
             if(creep.memory.role === 'harvester') {
                 roleHarvester.run(creep);
             } else if(creep.memory.role === 'upgrader') {
-                roleUpgrader.run(creep);
+                if (!needHarvesters) {
+                    roleUpgrader.run(creep);
+                }
             } else if(creep.memory.role === 'repairer') {
-                roleRepairer.run(creep);
+                if (!needHarvesters) {
+                    roleRepairer.run(creep);
+                }
             } else if(creep.memory.role === 'transferer') {
-                roleTransferer.run(creep);
+                if (!needHarvesters) {
+                    roleTransferer.run(creep);
+                }
             }
         }
 	}
