@@ -37,8 +37,9 @@ module.exports.loop = function () {
         Game.rooms.Spawn1.controller.activateSafeMode()
     }
 
-    if (!Game.spawns.Spawn1.spawning && Game.rooms[ROOM_NAME].energyAvailable >= 300) {
-        taskPopulate.run();
+    var energyAvailable = Game.rooms[ROOM_NAME].energyAvailable;
+    if (!Game.spawns.Spawn1.spawning && energyAvailable >= 300) {
+        taskPopulate.run(energyAvailable);
     }
 
     var harvesters = 0;

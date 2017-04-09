@@ -41,11 +41,11 @@ var taskPopulate = {
             console.log("Create upgrader " + upgraderCount + ", source " + 1);
             Game.spawns.Spawn1.createCreep(UNIT_BASIC.UPGRADE, null, {role: ROLE.UPGRADE, source: 1});
         } else if (repairerCount < UNIT_MAX.BUILD) {
-            console.log("Create repairer " + repairerCount + ", source " + (repairerSource < UNIT_MAX.BUILD - ALT_SOURCE_OPEN_SPOTS ? 1 : 0));
-            Game.spawns.Spawn1.createCreep(UNIT_BASIC.BUILD, null, {role: ROLE.BUILD, source: (repairerSource < UNIT_MAX.BUILD - ALT_SOURCE_OPEN_SPOTS ? 1 : 0)});
+            console.log("Create repairer " + repairerCount + ", source " + 1);
+            Game.spawns.Spawn1.createCreep(UNIT_BASIC.BUILD, null, {role: ROLE.BUILD, source: 1});
         } else if (transfererCount < UNIT_MAX.HAUL) {
             console.log("Create transferer " + transfererCount + ", source " + 0);
-            Game.spawns.Spawn1.createCreep(UNIT_BASIC.HAUL, null, {role: ROLE.HAUL, source: 0});
+            Game.spawns.Spawn1.createCreep((energyAvailable >= 450 ? UNIT_MEDIUM.HAUL : UNIT_BASIC.HAUL), null, {role: ROLE.HAUL, source: 0});
         }
     }
 };
