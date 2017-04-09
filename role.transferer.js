@@ -26,15 +26,15 @@ var roleTransferer = {
                 });
 
                 if (containers && containers.length > 0) {
-                    var nearestContainer = creep.pos.findClosestByRange(containers);
+                    var originContainer = Game.getObjectById("58e92fc3bce38f9c0919dc56");
 
                     for (var index in containers) {
-                        //if (containers[index] !== nearestContainer) {
+                        if (containers[index] !== originContainer) {
                             if (creep.transfer(containers[index], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                                 creep.moveTo(containers[index]);
                             }
                             return;
-                        //}
+                        }
                     }
                 }
             }

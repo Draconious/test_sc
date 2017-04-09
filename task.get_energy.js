@@ -22,9 +22,7 @@ var taskGetEnergy = {
                 }
             }
         } else {
-            var container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
-                filter: (s) => s.structureType === STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
-            });
+            var container = Game.getObjectById("58e92fc3bce38f9c0919dc56");
 
             if (container && creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
