@@ -27,3 +27,7 @@ UNIT_BASIC = {
 UNIT_MEDIUM = {
     HARVEST: [WORK, WORK, CARRY, CARRY, MOVE] //350
 };
+
+MY_FRIENDS = [
+    "Zarakk"
+];

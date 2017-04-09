@@ -21,9 +21,7 @@ var taskWork = {
                     roleRepairer.run(creep);
                 }
             } else if (creep.memory.role === ROLE.HAUL) {
-                if (!needHarvesters) {
-                    roleTransferer.run(creep);
-                }
+                roleTransferer.run(creep);
             }
         }
     }

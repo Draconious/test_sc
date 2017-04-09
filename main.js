@@ -29,6 +29,14 @@ module.exports.loop = function () {
         }
     }
 
+    var hostiles = Game.rooms[ROOM_NAME].find(FIND_HOSTILE_CREEPS, {
+        filter: (creep) => MY_FRIENDS.indexOf(creep.owner) === -1
+    });
+
+    if(hostiles.length > 0) {
+        Game.rooms.Spawn1.controller.activateSafeMode()
+    }
+
     if (!Game.spawns.Spawn1.spawning && Game.rooms[ROOM_NAME].energyAvailable >= 300) {
         taskPopulate.run();
     }
