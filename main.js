@@ -2,8 +2,8 @@ var taskWork = require('task.work');
 var taskPopulate = require('task.populate');
 
 module.exports.loop = function () {
-    for(var i in Memory.creeps) {
-        if(!Game.creeps[i]) {
+    for (var i in Memory.creeps) {
+        if (!Game.creeps[i]) {
             delete Memory.creeps[i];
         }
     }
@@ -14,35 +14,37 @@ module.exports.loop = function () {
     for (var id in towers) {
         var tower = towers[id];
 
-        if(tower) {
+        if (tower) {
             var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => structure.hits < structure.hitsMax
             });
-            if(closestDamagedStructure) {
+            if (closestDamagedStructure) {
                 tower.repair(closestDamagedStructure);
             }
 
             var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
-            if(closestHostile) {
+            if (closestHostile) {
                 tower.attack(closestHostile);
             }
         }
     }
 
-    if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energyAvailable >= 300) {
+    if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energy >= 300) {
         taskPopulate.run();
     }
 
 
-        var harvesters = [];
+    var harvesters = [];
 
-        for(var i in Game.creeps) {
-            if (Game.creeps[i].memory.role === 'harvester') {
-                harvesters.push(Game.creeps[i]);
-            }
+    for (var i in Game.creeps) {
+        if (Game.creeps[i].memory.role === 'harvester') {
+            harvesters.push(Game.creeps[i]);
         }
+    }
 
+    if (harvesters.length < 5) {
+        console.log("Brain drain!!");
+    }
     taskWork.run(harvesters.length < 5);
-
 
 };
