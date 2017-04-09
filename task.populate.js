@@ -2,9 +2,11 @@ var taskPopulate = {
 
     /** @param {Creep} creep **/
     run: function() {
+        var backupSourceSize = 2;
+
         var harvesterSource = 0;
         var harvesterCount = 0;
-        var maxHarvesterCount = 5;
+        var maxHarvesterCount = 6;
 
         var upgraderSource = 0;
         var upgraderCount = 0;
@@ -38,8 +40,8 @@ var taskPopulate = {
         }
 
         if(harvesterCount < maxHarvesterCount) {
-            console.log("Create harvester " + harvesterCount + ", source " + (harvesterSource < Math.ceil(maxHarvesterCount / 2) ? 1 : 0));
-            Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'harvester', source: (harvesterSource < 3 ? 1 : 0)});
+            console.log("Create harvester " + harvesterCount + ", source " + (harvesterSource < maxHarvesterCount - backupSourceSize ? 1 : 0));
+            Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'harvester', source: (harvesterSource < maxHarvesterCount - backupSourceSize ? 1 : 0)});
         } else if (upgraderCount < maxUpgraderCount) {
             console.log("Create upgrader " + upgraderCount + ", source " + 1);
             Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'upgrader', source: 1});
