@@ -1,4 +1,4 @@
-var taskGetEnergy = require('util.energy');
+var taskGetEnergy = require('task.get_energy');
 
 var roleRepairer = {
 
