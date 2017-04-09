@@ -2,7 +2,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleRepairer = require('role.repairer');
 var roleTransferer = require('role.transferer');
-var constants = require('constants');
+var my_constants = require('my_constants');
 
 var taskWork = {
 

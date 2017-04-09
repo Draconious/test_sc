@@ -1,6 +1,6 @@
 var taskWork = require('task.work');
 var taskPopulate = require('task.populate');
-var constants = require('constants');
+var my_constants = require('my_constants');
 
 module.exports.loop = function () {
     for (var i in Memory.creeps) {

@@ -1,5 +1,5 @@
 var taskGetEnergy = require('task.get_energy');
-var constants = require('constants');
+var my_constants = require('my_constants');
 
 var roleTransferer = {
 
