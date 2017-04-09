@@ -55,10 +55,10 @@ module.exports.loop = function () {
         }
     }
 
-    if (harvesters < 5) {
+    if (harvesters < 6) {
         console.log("Brain drain!!");
     }
 
-    taskWork.run(harvesters.length < 5 || upgraders < 3 || repairers < 3 || transferers < 3);
+    taskWork.run(harvesters.length < 6 || upgraders < 5 || repairers < 3 || transferers < 2);
 
 };
