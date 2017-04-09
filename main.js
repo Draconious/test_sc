@@ -53,7 +53,7 @@ module.exports.loop = function () {
         }
     }
 
-    if (harvesters < UNIT_MAX_HARVEST) {
+    if (harvesters < UNIT_MAX.HARVEST) {
         console.log("Brain drain!!");
     }
 
