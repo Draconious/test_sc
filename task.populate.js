@@ -42,13 +42,13 @@ var taskPopulate = {
             Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'harvester', source: (harvesterSource < 3 ? 1 : 0)});
         } else if (upgraderCount < maxUpgraderCount) {
             console.log("Create upgrader " + upgraderCount + ", source " + (upgraderSource < Math.ceil(maxUpgraderCount / 2) ? 1 : 0));
-            Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'upgrader', source: (upgraderSource < 3 ? 1 : 0)});
+            Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'upgrader', source: (upgraderSource < 3 ? 1 : 0)});
         } else if (repairerCount < maxuRepairerCount) {
             console.log("Create repairer " + repairerCount + ", source " + (repairerSource < Math.ceil(maxRepairerCount / 2) ? 1 : 0));
-            Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'repairer', source: (repairerSource < 3 ? 1 : 0)});
+            Game.spawns.Spawn1.createCreep([WORK, CARRY, CARRY, MOVE, MOVE], null, {role: 'repairer', source: (repairerSource < 3 ? 1 : 0)});
         } else if (transfererCount < maxuTransfererCount) {
-            console.log("Create transferer " + transfererCount + ", source " + (transfererSource < Math.ceil(maxuTransfererCount / 2) ? 1 : 0));
-            Game.spawns.Spawn1.createCreep([WORK, WORK, CARRY, CARRY, MOVE], null, {role: 'transferer', source: (transfererSource < 3 ? 1 : 0)});
+            console.log("Create transferer " + transfererCount + ", source " + 0);
+            Game.spawns.Spawn1.createCreep([CARRY, CARRY, MOVE, MOVE], null, {role: 'transferer', source: 0});
         }
 	}
 };

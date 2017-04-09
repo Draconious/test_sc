@@ -1,19 +1,15 @@
+var taskGetEnergy = require('task.get_energy');
+
 var roleTransferer = {
 
     /** @param {Creep} creep **/
     run: function(creep) {
         if (creep.carry.energy === 0) {
-        	var spawn = creep.pos.findClosestByRange(FIND_STRUCTURES, { filter: function (s) {
-                return s.structureType === STRUCTURE_SPAWN && s.energy > s.energyCapacity - 100;
-            }});
-
-			if(spawn && spawn.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(spawn);
-            }
+            taskGetEnergy.run(creep);
         } else {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                     filter: (structure) => {
-                        return (structure.structureType === STRUCTURE_EXTENSION && structure.energy < structure.energyCapacity);
+                        return ((structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity);
                     }
             });
 

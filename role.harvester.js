@@ -41,7 +41,24 @@ var roleHarvester = {
                     }
                 });
 
-                target = creep.pos.findClosestByRange(containers);
+                if (containers && containers.length > 0) {
+                    target = creep.pos.findClosestByRange(containers);
+                } else {
+                    if (Game.spawns.Spawn1.energy < Game.spawns.Spawn1.energyCapacity) {
+                        target = Game.spawns.Spawn1;
+                    } else {
+
+                        var structures = creep.room.find(FIND_STRUCTURES, {
+                            filter: (structure) => {
+                                return (structure.structureType === STRUCTURE_EXTENSION) && structure.energy < structure.energyCapacity;
+                            }
+                        });
+
+                        if (structures.length > 0) {
+                            target = creep.pos.findClosestByRange(structures);
+                        }
+                    }
+                }
             }
 
             if(target && creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
