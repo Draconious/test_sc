@@ -1,4 +1,5 @@
 var taskGetEnergy = require('task.get_energy');
+var constants = require('constants');
 
 var roleTransferer = {
 
@@ -26,7 +27,7 @@ var roleTransferer = {
                 });
 
                 if (containers && containers.length > 0) {
-                    var originContainer = Game.getObjectById("58e92fc3bce38f9c0919dc56");
+                    var originContainer = Game.getObjectById(ALT_CONTAINER_ID);
 
                     for (var index in containers) {
                         if (containers[index] !== originContainer) {

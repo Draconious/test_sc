@@ -1,3 +1,5 @@
+var constants = require('constants');
+
 var taskGetEnergy = {
 
     /** @param {Creep} creep **/
@@ -22,7 +24,7 @@ var taskGetEnergy = {
                 }
             }
         } else {
-            var container = Game.getObjectById("58e92fc3bce38f9c0919dc56");
+            var container = Game.getObjectById(ALT_CONTAINER_ID);
 
             if (container && creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                 creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
