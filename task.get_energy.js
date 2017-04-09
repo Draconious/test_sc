@@ -17,7 +17,7 @@ var taskGetEnergy = {
                         filter: (s) => (s.structureType === STRUCTURE_SPAWN || s.structureType === STRUCTURE_EXTENSION) && s.energy >= 50
                     });
 
-                    if (energyStructures.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
+                    if (energyStructures && energyStructures.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
                         creep.moveTo(energyStructures, {visualizePathStyle: {stroke: '#FF0000'}});
                     }
                 }
@@ -26,7 +26,7 @@ var taskGetEnergy = {
                     filter: (s) => s.structureType === STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
                 });
 
-                if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                if (container && creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
                 }
             }

@@ -29,7 +29,7 @@ module.exports.loop = function () {
         }
     }
 
-    if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energy >= 300) {
+    if (!Game.spawns.Spawn1.spawning && Game.spawns.Spawn1.energyAvailable >= 300) {
         taskPopulate.run();
     }
 
