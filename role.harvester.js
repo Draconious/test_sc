@@ -27,7 +27,7 @@ var roleHarvester = {
                     } else {
                         var containers = creep.room.find(FIND_STRUCTURES, {
                             filter: (container) => {
-                                return (container.structureType === STRUCTURE_CONTAINER) && container.energy < container.energyCapacity;
+                                return (container.structureType === STRUCTURE_CONTAINER) && container.store[RESOURCE_ENERGY] < container.storeCapacity;
                             }
                         });
 
