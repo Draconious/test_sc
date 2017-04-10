@@ -2,6 +2,7 @@ var roleHarvester = require('role.harvester');
 var roleUpgrader = require('role.upgrader');
 var roleRepairer = require('role.repairer');
 var roleTransferer = require('role.transferer');
+var roleScout = require('role.scout');
 var my_constants = require('my_constants');
 
 var taskWork = {
@@ -22,6 +23,8 @@ var taskWork = {
                 }
             } else if (creep.memory.role === ROLE.HAUL) {
                 roleTransferer.run(creep);
+            } else if (creep.memory.role === ROLE.SCOUT) {
+                roleScout.run(creep);
             }
         }
     }
