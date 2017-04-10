@@ -30,7 +30,8 @@ UNIT_BASIC = {
 
 UNIT_MEDIUM = {
     HARVEST: [WORK, WORK, CARRY, CARRY, MOVE], //350
-    HAUL: [CARRY, CARRY, CARRY, CARRY, MOVE] //450
+    HAUL: [CARRY, CARRY, CARRY, CARRY, MOVE], //450
+    UPGRADE: [WORK, WORK, WORK, WORK, CARRY, CARRY, MOVE] //450
 };
 
 MY_FRIENDS = [
@@ -63,6 +64,8 @@ SCOUT_ROOMS = {
         "E8S91",
         "E9S91",
         "E9S92",
+        "E8S92",
+        "E7S92",
         "E8S92"
     ]
 };

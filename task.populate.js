@@ -42,7 +42,7 @@ var taskPopulate = {
             Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {role: ROLE.HAUL, source: 0});
         } else if (scoutCount < UNIT_MAX.SCOUT) {
             console.log("Create scout " + scoutCount);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.SCOUT, null, {role: ROLE.SCOUT, scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST)});
+            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.SCOUT, null, {role: ROLE.SCOUT, scoutDirection: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST), scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_ROOMS.WEST : SCOUT_ROOMS.EAST)});
         }
     }
 };
