@@ -37,7 +37,7 @@ var taskPopulate = {
             Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.BUILD, null, {role: ROLE.BUILD, source: 1});
         } else if (transfererCount < UNIT_MAX.HAUL) {
             console.log("Create transferer " + transfererCount + ", source " + 0);
-            Game.spawns[MY_SPAWN_NAME].createCreep((energyAvailable >= 450 ? UNIT_MEDIUM.HAUL : UNIT_BASIC.HAUL), null, {role: ROLE.HAUL, source: 0});
+            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {role: ROLE.HAUL, source: 0});
         } else if (scoutCount < UNIT_MAX.SCOUT) {
             console.log("Create scout " + scoutCount);
             Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.SCOUT, null, {role: ROLE.SCOUT, scoutRooms: SCOUT_ROOMS});
