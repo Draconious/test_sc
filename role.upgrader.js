@@ -17,7 +17,7 @@ var roleUpgrader = {
             var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
             var nearestTower = creep.pos.findClosestByRange(towers);
 
-            if (nearestTower && nearestTower.energy < nearestTower.energyCapacity) {
+            if (nearestTower && nearestTower.energy < 250) {
                 if (creep.transfer(nearestTower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
                     creep.moveTo(nearestTower, {visualizePathStyle: {stroke: '#FFFFFF'}});
                 }

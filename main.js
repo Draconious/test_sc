@@ -23,16 +23,16 @@ module.exports.loop = function () {
         var tower = towers[id];
 
         if (tower) {
-            var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (structure) => structure.hits < (structure.hitsMax / 2)
-            });
-            if (closestDamagedStructure) {
-                tower.repair(closestDamagedStructure);
-            }
-
             var closestHostile = tower.pos.findClosestByRange(hostiles);
             if (closestHostile) {
                 tower.attack(closestHostile);
+            } else {
+                // var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
+                //     filter: (structure) => structure.hits < (structure.hitsMax / 2)
+                // });
+                // if (closestDamagedStructure) {
+                //     tower.repair(closestDamagedStructure);
+                // }
             }
         }
     }
