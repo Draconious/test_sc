@@ -44,7 +44,7 @@ var roleHarvester = {
                 if (containers && containers.length > 0) {
                     target = creep.pos.findClosestByRange(containers);
                 } else {
-                    if (Game.spawns[MY_SPAWN_NAME]..energy < Game.spawns[MY_SPAWN_NAME]..energyCapacity) {
+                    if (Game.spawns[MY_SPAWN_NAME].energy < Game.spawns[MY_SPAWN_NAME].energyCapacity) {
                         target = Game.spawns.Spawn1;
                     } else {
 
