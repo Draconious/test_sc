@@ -10,11 +10,11 @@ module.exports.loop = function () {
     }
 
     var hostiles = Game.rooms[ROOM_NAME].find(FIND_HOSTILE_CREEPS, {
-        filter: (creep) => MY_FRIENDS.indexOf(creep.owner) === -1
+        filter: (creep) => MY_FRIENDS.indexOf(creep.owner.username) === -1
     });
 
     if (hostiles && hostiles.length > 0) {
-        Game.rooms[MY_SPAWN_NAME].controller.activateSafeMode()
+        Game.rooms[ROOM_NAME].controller.activateSafeMode()
     }
 
     var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
