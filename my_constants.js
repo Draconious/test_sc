@@ -10,7 +10,7 @@ ROLE = {
     SCOUT: "scout"
 };
 
-ALT_CONTAINER_ID = "58e92fc3bce38f9c0919dc56";
+ALT_CONTAINER_ID = "58ebb4e20e28fe4439704160";
 
 UNIT_MAX = {
     HARVEST: 6,
