@@ -25,7 +25,13 @@ var roleScout = {
             if (creep.memory.scoutRooms[0] === creep.room.name) {
                 creep.memory.scoutRooms.shift();
                 if (creep.memory.scoutRooms.length === 0) {
-                    creep.memory.scoutRooms = SCOUT_ROOMS;
+                    if (creep.memory.scoutDirection === SCOUT_DIRECTION.EAST) {
+                        creep.memory.scoutRooms = SCOUT_ROOMS.WEST;
+                        creep.memory.scoutDirection = SCOUT_DIRECTION.WEST;
+                    } else {
+                        creep.memory.scoutRooms = SCOUT_ROOMS.EAST;
+                        creep.memory.scoutDirection = SCOUT_DIRECTION.EAST;
+                    }
                 }
             }
             creep.moveTo(new RoomPosition(25, 25, creep.memory.scoutRooms[0]));
