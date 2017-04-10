@@ -9,6 +9,14 @@ module.exports.loop = function () {
         }
     }
 
+    var hostiles = Game.rooms[ROOM_NAME].find(FIND_HOSTILE_CREEPS, {
+        filter: (creep) => MY_FRIENDS.indexOf(creep.owner) === -1
+    });
+
+    if (hostiles && hostiles.length > 0) {
+        Game.rooms[MY_SPAWN_NAME].controller.activateSafeMode()
+    }
+
     var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
 
     for (var id in towers) {
@@ -22,23 +30,15 @@ module.exports.loop = function () {
                 tower.repair(closestDamagedStructure);
             }
 
-            var closestHostile = tower.pos.findClosestByRange(FIND_HOSTILE_CREEPS);
+            var closestHostile = tower.pos.findClosestByRange(hostiles);
             if (closestHostile) {
                 tower.attack(closestHostile);
             }
         }
     }
 
-    var hostiles = Game.rooms[ROOM_NAME].find(FIND_HOSTILE_CREEPS, {
-        filter: (creep) => MY_FRIENDS.indexOf(creep.owner) === -1
-    });
-
-    if(hostiles.length > 0) {
-        Game.rooms.Spawn1.controller.activateSafeMode()
-    }
-
     var energyAvailable = Game.rooms[ROOM_NAME].energyAvailable;
-    if (!Game.spawns.Spawn1.spawning && energyAvailable >= 300) {
+    if (!Game.spawns[MY_SPAWN_NAME].spawning && energyAvailable >= 300) {
         taskPopulate.run(energyAvailable);
     }
 
@@ -46,19 +46,19 @@ module.exports.loop = function () {
     var upgraders = 0;
     var repairers = 0;
     var transferers = 0;
+    var scouts = 0;
 
     for (var i in Game.creeps) {
         if (Game.creeps[i].memory.role === ROLE.HARVEST) {
             harvesters++;
-        }
-        if (Game.creeps[i].memory.role === ROLE.UPGRADE) {
+        } else if (Game.creeps[i].memory.role === ROLE.UPGRADE) {
             upgraders++;
-        }
-        if (Game.creeps[i].memory.role === ROLE.BUILD) {
+        } else if (Game.creeps[i].memory.role === ROLE.BUILD) {
             repairers++;
-        }
-        if (Game.creeps[i].memory.role === ROLE.HAUL) {
+        } else if (Game.creeps[i].memory.role === ROLE.HAUL) {
             transferers++;
+        } else if (Game.creeps[i].memory.role === ROLE.SCOUT) {
+            scouts++;
         }
     }
 
@@ -66,9 +66,10 @@ module.exports.loop = function () {
         console.log("Brain drain!!");
     }
 
-    taskWork.run(harvesters.length < UNIT_MAX.HARVEST ||
+    taskWork.run(harvesters < UNIT_MAX.HARVEST ||
         upgraders < UNIT_MAX.UPGRADE ||
         repairers < UNIT_MAX.BUILD ||
-        transferers < UNIT_MAX.HAUL);
+        transferers < UNIT_MAX.HAUL ||
+        scouts < UNIT_MAX.SCOUT);
 
 };
