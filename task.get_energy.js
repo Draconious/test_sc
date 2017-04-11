@@ -7,7 +7,7 @@ var taskGetEnergy = {
 
         if (creep.memory.source === 1) {
             var containers = creep.pos.findInRange(FIND_STRUCTURES, 10, {
-                filter: (s) => s.structureType === STRUCTURE_CONTAINER && s.store[RESOURCE_ENERGY] > 0
+                filter: (s) => (s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE) && s.store[RESOURCE_ENERGY] > 0
             });
 
             if (containers && containers.length > 0) {

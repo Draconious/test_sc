@@ -4,6 +4,7 @@ var taskPopulate = {
 
     run: function () {
         var harvesterSource = 0;
+        var transferSource = 0;
         var scoutDirection = SCOUT_DIRECTION.WEST;
 
         var harvesterCount = 0;
@@ -22,6 +23,7 @@ var taskPopulate = {
                 repairerCount++;
             } else if (Game.creeps[i].memory.role === ROLE.HAUL) {
                 transfererCount++;
+                transferSource = transferSource + parseInt(Game.creeps[i].memory.source, 10);
             } else if (Game.creeps[i].memory.role === ROLE.SCOUT) {
                 scoutCount++;
                 scoutDirection = Game.creeps[i].memory.scoutDirection;
@@ -39,10 +41,10 @@ var taskPopulate = {
             Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.BUILD, null, {role: ROLE.BUILD, source: 1});
         } else if (transfererCount < UNIT_MAX.HAUL) {
             console.log("Create transferer " + transfererCount + ", source " + 0);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {role: ROLE.HAUL, source: 0});
+            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {role: ROLE.HAUL, source: (transferSource < 1 ? 1 : 0)});
         } else if (scoutCount < UNIT_MAX.SCOUT) {
             console.log("Create scout " + scoutCount);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.SCOUT, null, {role: ROLE.SCOUT, scoutDirection: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST), scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_ROOMS.WEST : SCOUT_ROOMS.EAST)});
+            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.SCOUT, null, {role: ROLE.SCOUT, scoutDirection: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST), scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_ROOMS.WEST : SCOUT_ROOMS.EAST)});
         }
     }
 };

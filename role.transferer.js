@@ -22,7 +22,7 @@ var roleTransferer = {
 
                 var containers = creep.room.find(FIND_STRUCTURES, {
                     filter: (container) => {
-                        return (container.structureType === STRUCTURE_CONTAINER) && container.store[RESOURCE_ENERGY] < container.storeCapacity;
+                        return (container.structureType === STRUCTURE_CONTAINER || container.structureType === STRUCTURE_STORAGE) && container.store[RESOURCE_ENERGY] < container.storeCapacity;
                     }
                 });
 

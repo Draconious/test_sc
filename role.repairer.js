@@ -12,7 +12,6 @@ var roleRepairer = {
         if (!creep.memory.repairing && creep.carry.energy < creep.carryCapacity) {
             taskGetEnergy.run(creep);
         } else {
-
             var closestConstruction = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 
             if (closestConstruction) {

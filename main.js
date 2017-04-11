@@ -14,7 +14,7 @@ module.exports.loop = function () {
     });
 
     if (hostiles && hostiles.length > 0) {
-        Game.rooms[ROOM_NAME].controller.activateSafeMode()
+        //Game.rooms[ROOM_NAME].controller.activateSafeMode()
     }
 
     var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
@@ -28,7 +28,7 @@ module.exports.loop = function () {
                 tower.attack(closestHostile);
             } else {
                 var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < (structure.hitsMax / 2)
+                    filter: (structure) => structure.hits < structure.hitsMax
                 });
                 if (closestDamagedStructure) {
                     tower.repair(closestDamagedStructure);
