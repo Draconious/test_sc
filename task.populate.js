@@ -4,13 +4,13 @@ var taskPopulate = {
 
     run: function () {
         var harvesterSource = 0;
-        var transferSource = 0;
+        var haulSource = 0;
         var scoutDirection = SCOUT_DIRECTION.WEST;
 
         var harvesterCount = 0;
         var upgraderCount = 0;
-        var repairerCount = 0;
-        var transfererCount = 0;
+        var builderCount = 0;
+        var haulerCount = 0;
         var scoutCount = 0;
 
         for (var i in Game.creeps) {
@@ -20,10 +20,10 @@ var taskPopulate = {
             } else if (Game.creeps[i].memory.role === ROLE.UPGRADE) {
                 upgraderCount++;
             } else if (Game.creeps[i].memory.role === ROLE.BUILD) {
-                repairerCount++;
+                builderCount++;
             } else if (Game.creeps[i].memory.role === ROLE.HAUL) {
-                transfererCount++;
-                transferSource = transferSource + parseInt(Game.creeps[i].memory.source, 10);
+                haulerCount++;
+                haulSource = haulSource + parseInt(Game.creeps[i].memory.source, 10);
             } else if (Game.creeps[i].memory.role === ROLE.SCOUT) {
                 scoutCount++;
                 scoutDirection = Game.creeps[i].memory.scoutDirection;
@@ -31,20 +31,61 @@ var taskPopulate = {
         }
 
         if (harvesterCount < UNIT_MAX.HARVEST) {
-            console.log("Create harvester " + harvesterCount + ", source " + (harvesterSource < UNIT_MAX.HARVEST - ALT_SOURCE_OPEN_SPOTS ? 1 : 0));
-            Game.spawns[MY_SPAWN_NAME].createCreep((harvesterCount === 0 ? UNIT_BASIC.HARVEST : UNIT_MEDIUM.HARVEST), null, {role: ROLE.HARVEST, source: (harvesterSource < UNIT_MAX.HARVEST - ALT_SOURCE_OPEN_SPOTS ? 1 : 0)});
+            var res = Game.spawns[MY_SPAWN_NAME].createCreep((harvesterCount === 0 ? UNIT_BASIC.HARVEST : UNIT_MEDIUM.HARVEST), null, {
+                role: ROLE.HARVEST,
+                source: (harvesterSource < UNIT_MAX.HARVEST - ALT_SOURCE_OPEN_SPOTS ? 1 : 0),
+                in_colour: UNIT_COLOUR_IN.HARVEST,
+                out_colour: UNIT_COLOUR_OUT.HARVEST
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create harvester " + res);
+            }
         } else if (upgraderCount < UNIT_MAX.UPGRADE) {
-            console.log("Create upgrader " + upgraderCount + ", source " + 1);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.UPGRADE, null, {role: ROLE.UPGRADE, source: 1});
-        } else if (repairerCount < UNIT_MAX.BUILD) {
-            console.log("Create repairer " + repairerCount + ", source " + 1);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_BASIC.BUILD, null, {role: ROLE.BUILD, source: 1});
-        } else if (transfererCount < UNIT_MAX.HAUL) {
-            console.log("Create transferer " + transfererCount + ", source " + 0);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {role: ROLE.HAUL, source: (transferSource < 1 ? 1 : 0)});
+            var res = Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.UPGRADE, null, {
+                role: ROLE.UPGRADE,
+                source: 1,
+                in_colour: UNIT_COLOUR_IN.UPGRADE,
+                out_colour: UNIT_COLOUR_OUT.UPGRADE
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create upgrader " + res);
+            }
+        } else if (builderCount < UNIT_MAX.BUILD) {
+            var res = Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.BUILD, null, {
+                role: ROLE.BUILD,
+                source: 1,
+                in_colour: UNIT_COLOUR_IN.BUILD,
+                out_colour: UNIT_COLOUR_OUT.BUILD
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create repairer " + res);
+            }
+        } else if (haulerCount < UNIT_MAX.HAUL) {
+            var res = Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.HAUL, null, {
+                role: ROLE.HAUL,
+                source: (haulSource < 1 ? 1 : 0),
+                in_colour: UNIT_COLOUR_IN.HAUL,
+                out_colour: UNIT_COLOUR_OUT.HAUL
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create transferer " + res);
+            }
         } else if (scoutCount < UNIT_MAX.SCOUT) {
-            console.log("Create scout " + scoutCount);
-            Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.SCOUT, null, {role: ROLE.SCOUT, scoutDirection: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST), scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_ROOMS.WEST : SCOUT_ROOMS.EAST)});
+            var res = Game.spawns[MY_SPAWN_NAME].createCreep(UNIT_MEDIUM.SCOUT, null, {
+                role: ROLE.SCOUT,
+                scoutDirection: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_DIRECTION.WEST : SCOUT_DIRECTION.EAST),
+                scoutRooms: (scoutDirection === SCOUT_DIRECTION.EAST ? SCOUT_ROOMS.WEST : SCOUT_ROOMS.EAST),
+                in_colour: UNIT_COLOUR_IN.SCOUT,
+                out_colour: UNIT_COLOUR_OUT.SCOUT
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create scout " + res);
+            }
         }
     }
 };
