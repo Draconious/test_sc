@@ -5,9 +5,9 @@ var roleScout = {
     /** @param {Creep} creep **/
     run: function (creep) {
         var hostiles = Game.rooms[creep.room.name].find(FIND_HOSTILE_CREEPS, {
-            filter: (creep) => MY_FRIENDS.indexOf(creep.owner.username) === -1
+            filter: (creep) => (MY_FRIENDS.indexOf(creep.owner.username) === -1 && creep.getActiveBodyparts(MOVE) > 0 && creep.getActiveBodyparts(ATTACK) === 0)
         });
-
+        
         if (hostiles && hostiles.length > 0) {
             var nearestHostile = creep.pos.findClosestByPath(hostiles);
             var res = creep.rangedAttack(nearestHostile);
@@ -42,7 +42,7 @@ var roleScout = {
                     }
                 }
             }
-            creep.moveTo(new RoomPosition(25, 25, creep.memory.scoutRooms[0]));
+            creep.moveTo(new RoomPosition(10, 38, creep.memory.scoutRooms[0]));
         }
     }
 };

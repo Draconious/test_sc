@@ -1,5 +1,6 @@
 var taskWork = require('task.work');
 var taskPopulate = require('task.populate');
+var tower = require('obj.tower');
 var my_constants = require('my_constants');
 
 module.exports.loop = function () {
@@ -9,33 +10,7 @@ module.exports.loop = function () {
         }
     }
 
-    var hostiles = Game.rooms[ROOM_NAME].find(FIND_HOSTILE_CREEPS, {
-        filter: (creep) => MY_FRIENDS.indexOf(creep.owner.username) === -1
-    });
-
-    if (hostiles && hostiles.length > 0) {
-        //Game.rooms[ROOM_NAME].controller.activateSafeMode()
-    }
-
-    var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-
-    for (var id in towers) {
-        var tower = towers[id];
-
-        if (tower) {
-            var closestHostile = tower.pos.findClosestByRange(hostiles);
-            if (closestHostile) {
-                tower.attack(closestHostile);
-            } else {
-                var closestDamagedStructure = tower.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (structure) => structure.hits < structure.hitsMax
-                });
-                if (closestDamagedStructure) {
-                    tower.repair(closestDamagedStructure);
-                }
-            }
-        }
-    }
+    tower.defend(ROOM_NAME);
 
     var energyAvailable = Game.rooms[ROOM_NAME].energyAvailable;
     if (!Game.spawns[MY_SPAWN_NAME].spawning && energyAvailable >= 300) {

@@ -6,7 +6,7 @@ var roleTransferer = {
     /** @param {Creep} creep **/
     run: function (creep) {
         if (creep.carry.energy === 0) {
-            taskGetEnergy.run(creep);
+                taskGetEnergy.run(creep);
         } else {
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {

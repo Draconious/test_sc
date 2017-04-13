@@ -12,7 +12,7 @@ var taskGetEnergy = {
 
             if (containers && containers.length > 0) {
                 if (creep.withdraw(containers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(containers[0], {visualizePathStyle: {stroke: '#FF0000'}});
+                    creep.moveTo(containers[0], {visualizePathStyle: {stroke: creep.memory.in_colour}});
                 }
             } else {
                 var energyStructures = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -20,14 +20,14 @@ var taskGetEnergy = {
                 });
 
                 if (energyStructures && energyStructures.transferEnergy(creep) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(energyStructures, {visualizePathStyle: {stroke: '#FF0000'}});
+                    creep.moveTo(energyStructures, {visualizePathStyle: {stroke: creep.memory.in_colour}});
                 }
             }
         } else {
             var container = Game.getObjectById(ALT_CONTAINER_ID);
 
             if (container && creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(container, {visualizePathStyle: {stroke: '#FF0000'}});
+                creep.moveTo(container, {visualizePathStyle: {stroke: creep.memory.in_colour}});
             }
         }
     }
