@@ -5,46 +5,57 @@ var roleRepairer = {
     build: function (creep) {
 
         if (creep.carry.energy === 0) {
-            creep.memory.busy = false;
+            creep.memory.task = null;
+            creep.memory.targetId = null;
         }
 
-        if (!creep.memory.busy && creep.carry.energy < creep.carryCapacity) {
+        if (!creep.memory.task && creep.carry.energy < creep.carryCapacity) {
             taskGetEnergy.run(creep);
         } else {
-            var closestConstruction = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+            if (!creep.memory.targetId) {
+                var structure = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
 
-            if (closestConstruction) {
-                if (creep.build(closestConstruction) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestConstruction, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                if (structure) {
+                    creep.memory.targetId = structure.id;
                 }
-
-                creep.memory.busy = true;
-                return;
             }
-        }
+
+            var target = Game.getObjectById(creep.memory.targetId);
+            if (target && creep.build(target) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+            } else {
+                creep.memory.task = null;
+                creep.memory.targetId = null;
+            }
+        }FIND_DROPPED_ENERGY
     },
 
     repair: function (creep) {
 
         if (creep.carry.energy === 0) {
-            creep.memory.busy = false;
+            creep.memory.task = null;
+            creep.memory.targetId = null;
         }
 
-        if (!creep.memory.busy && creep.carry.energy < creep.carryCapacity) {
+        if (!creep.memory.task && creep.carry.energy < creep.carryCapacity) {
             taskGetEnergy.run(creep);
         } else {
+            if (!creep.memory.targetId) {
+                var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (s) =>  s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART && s.hits < (s.hitsMax * 0.9)
+                });
 
-            var closestDamagedStructure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (s) =>  s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART && s.hits < (s.hitsMax * 0.9)
-            });
-
-            if (closestDamagedStructure) {
-                if (creep.repair(closestDamagedStructure) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(closestDamagedStructure, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                if (structure) {
+                    creep.memory.targetId = structure.id;
                 }
+            }
 
-                creep.memory.busy = true;
-                return;
+            var target = Game.getObjectById(creep.memory.targetId);
+            if (target && target.hits < (target.hitsMax * 0.9) && creep.repair(target) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+            } else {
+                creep.memory.task = null;
+                creep.memory.targetId = null;
             }
         }
     },
@@ -52,53 +63,68 @@ var roleRepairer = {
     tower: function (creep) {
 
         if (creep.carry.energy === 0) {
-            creep.memory.busy = false;
+            creep.memory.task = null;
+            creep.memory.targetId = null;
         }
 
-        if (!creep.memory.busy && creep.carry.energy < creep.carryCapacity) {
+        if (!creep.memory.task && creep.carry.energy < creep.carryCapacity) {
             taskGetEnergy.run(creep);
         } else {
-            var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {filter: {structureType: STRUCTURE_TOWER}});
-            var nearestTower = creep.pos.findClosestByRange(towers);
+            if (!creep.memory.targetId) {
+                var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {
+                    filter: (s) =>  s.structureType === STRUCTURE_TOWER && s.energy < (s.energyCapacity * 0.9)
+                });
 
-            if (nearestTower && nearestTower.energy < nearestTower.energyCapacity) {
-                if (creep.transfer(nearestTower, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(nearestTower, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                var tower = creep.pos.findClosestByRange(towers);
+                if (tower) {
+                    creep.memory.targetId = tower.id;
                 }
+            }
 
-                creep.memory.busy = true;
-                return;
+            var target = Game.getObjectById(creep.memory.targetId);
+            if (target && target.energy < (target.energyCapacity * 0.9) && creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+            } else {
+                creep.memory.task = null;
+                creep.memory.targetId = null;
             }
         }
 
     },
 
     wall: function (creep) {
+
         if (creep.carry.energy === 0) {
-            creep.memory.busy = false;
+            creep.memory.task = null;
+            creep.memory.targetId = null;
         }
 
-        if (!creep.memory.busy && creep.carry.energy < creep.carryCapacity) {
+        if (!creep.memory.task && creep.carry.energy < creep.carryCapacity) {
             taskGetEnergy.run(creep);
         } else {
-            var walls = creep.room.find(FIND_STRUCTURES, {
-                filter: (structure) => {
-                    return structure.structureType === STRUCTURE_WALL
-                }
-            });
+            if (!creep.memory.targetId) {
+                var walls = creep.room.find(FIND_STRUCTURES, {
+                    filter: (structure) => {
+                        return structure.structureType === STRUCTURE_WALL
+                    }
+                });
 
-            var lowestWall = _.min(walls, function (wall) {
-                return wall.hits;
-            });
-            
-            if (lowestWall) {
-                if (creep.repair(lowestWall) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(lowestWall, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                var lowestWall = _.min(walls, function (wall) {
+                    return wall.hits;
+                });
+
+                if (lowestWall) {
+                    creep.memory.targetId = lowestWall.id;
                 }
             }
 
-            creep.memory.busy = true;
-            return;
+            var target = Game.getObjectById(creep.memory.targetId);
+            if (target && target.hits < (target.hitsMax * 0.9) && creep.repair(target) === ERR_NOT_IN_RANGE) {
+                creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+            } else {
+                creep.memory.task = null;
+                creep.memory.targetId = null;
+            }
         }
 
     }
