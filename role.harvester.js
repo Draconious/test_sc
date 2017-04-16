@@ -1,6 +1,6 @@
 var roleHarvester = {
 
-    harvest: function(creep) {
+    harvest: function(creep, spawnName) {
 	    if(creep.carry.energy < creep.carryCapacity) {
             var sources = creep.room.find(FIND_SOURCES);
             if(creep.harvest(sources[creep.memory.source ? creep.memory.source : 0]) === ERR_NOT_IN_RANGE) {
@@ -17,8 +17,8 @@ var roleHarvester = {
             if (containers && containers.length > 0) {
                 target = creep.pos.findClosestByRange(containers);
             } else {
-                if (Game.spawns[MY_SPAWN_NAME].energy < Game.spawns[MY_SPAWN_NAME].energyCapacity) {
-                    target = Game.spawns.Spawn1;
+                if (Game.spawns[spawnName].energy < Game.spawns[spawnName].energyCapacity) {
+                    target = Game.spawns[spawnName];
                 } else {
 
                     var structures = creep.room.find(FIND_STRUCTURES, {

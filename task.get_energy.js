@@ -6,13 +6,13 @@ var taskGetEnergy = {
     run: function (creep) {
 
         if (creep.memory.source === 1) {
-            var containers = creep.pos.findInRange(FIND_STRUCTURES, 10, {
+            var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (s) => (s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE) && s.store[RESOURCE_ENERGY] > 0
             });
 
-            if (containers && containers.length > 0) {
-                if (creep.withdraw(containers[0], RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(containers[0], {visualizePathStyle: {stroke: creep.memory.in_colour}});
+            if (container) {
+                if (creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(container, {visualizePathStyle: {stroke: creep.memory.in_colour}});
                 }
             } else {
                 var energyStructures = creep.pos.findClosestByRange(FIND_STRUCTURES, {
@@ -25,9 +25,13 @@ var taskGetEnergy = {
             }
         } else {
             var container = Game.getObjectById(ALT_CONTAINER_ID);
-
-            if (container && creep.withdraw(container, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(container, {visualizePathStyle: {stroke: creep.memory.in_colour}});
+            if (container) {
+                var res = creep.withdraw(container, RESOURCE_ENERGY);
+                if (res === ERR_NOT_IN_RANGE) {
+                    creep.moveTo(container, {visualizePathStyle: {stroke: creep.memory.in_colour}});
+                } else if (res === OK) {
+                    RESOURCES_ALL.forEach(resourceType => creep.withdraw(container, resourceType));
+                }
             }
         }
     }

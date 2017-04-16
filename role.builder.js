@@ -27,7 +27,7 @@ var roleRepairer = {
                 creep.memory.task = null;
                 creep.memory.targetId = null;
             }
-        }FIND_DROPPED_ENERGY
+        }
     },
 
     repair: function (creep) {
@@ -42,7 +42,7 @@ var roleRepairer = {
         } else {
             if (!creep.memory.targetId) {
                 var structure = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (s) =>  s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART && s.hits < (s.hitsMax * 0.9)
+                    filter: (s) =>  s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART && s.hits < (s.hitsMax * 0.7)
                 });
 
                 if (structure) {
@@ -71,7 +71,7 @@ var roleRepairer = {
             taskGetEnergy.run(creep);
         } else {
             if (!creep.memory.targetId) {
-                var towers = Game.rooms[ROOM_NAME].find(FIND_MY_STRUCTURES, {
+                var towers = Game.rooms[creep.room.name].find(FIND_MY_STRUCTURES, {
                     filter: (s) =>  s.structureType === STRUCTURE_TOWER && s.energy < (s.energyCapacity * 0.9)
                 });
 

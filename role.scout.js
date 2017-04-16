@@ -87,7 +87,8 @@ var roleScout = {
                     }
                 }
             }
-            creep.moveTo(new RoomPosition(26, 1, creep.memory.scoutRooms[0]));
+            creep.moveTo(new RoomPosition(42, 0, creep.memory.scoutRooms[0]));
+            //creep.moveTo(new RoomPosition(24, 1, creep.memory.scoutRooms[0]));
         }
     }
 };

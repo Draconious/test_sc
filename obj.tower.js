@@ -38,7 +38,7 @@ module.exports = {
             if (towers[index].energy > (towers[index].energyCapacity * 0.5)) {
 
                 var closestDamagedStructure = towers[index].pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (s) => (s.hits < s.hitsMax) && s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART
+                    filter: (s) => (s.hits < s.hitsMax * 0.8) && s.structureType !== STRUCTURE_WALL && s.structureType !== STRUCTURE_RAMPART
                 });
 
                 if (closestDamagedStructure) {
