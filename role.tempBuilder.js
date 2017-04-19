@@ -4,7 +4,7 @@ var roleTempBuilder = {
 
     build: function (creep) {
         if (creep.memory.claimRoom !== creep.room.name) {
-            creep.moveTo(new RoomPosition(30, 1, "E8S93"));
+            creep.moveTo(new RoomPosition(30, 1, "E7S93"));
         } else {
             
             if (creep.carry.energy === 0) {

@@ -52,11 +52,11 @@ module.exports.loop = function () {
                 }
             }
 
-            if (harvesters < UNIT_MAX.HARVEST) {
+            if (harvesters < UNIT_MAX[spawnName].HARVEST) {
                 console.log("Brain drain in " + roomName + "!!");
             }
 
-            taskWork.run(harvesters < UNIT_MAX.HARVEST, roomName, spawnName);
+            taskWork.run(harvesters < UNIT_MAX[spawnName].HARVEST, roomName, spawnName);
         }
     }
 

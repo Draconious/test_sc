@@ -3,6 +3,26 @@ var my_constants = require('my_constants');
 var taskPopulate = {
 
     run: function (energyAvailable, energyCapacity, spawnName, roomName) {
+        var modifiedCapacity = 0;
+        
+        if (energyAvailable >= 12900) {
+            modifiedCapacity = "12900";
+        } else if (energyAvailable >= 5600) {
+            modifiedCapacity = "5600";
+        } else if (energyAvailable >= 2300) {
+            modifiedCapacity = "2300";
+        } else if (energyAvailable >= 1800) {
+            modifiedCapacity = "1800";
+        } else if (energyAvailable >= 1300) {
+            modifiedCapacity = "1300";
+        } else if (energyAvailable >= 800) {
+            modifiedCapacity = "800";
+        } else if (energyAvailable >= 550) {
+            modifiedCapacity = "550";
+        } else {
+            modifiedCapacity = "300";
+        }
+        
         var harvesterSource = 0;
         var haulSource = 0;
         var scoutDirection = SCOUT_DIRECTION.WEST;
@@ -22,7 +42,7 @@ var taskPopulate = {
                     upgraderCount++;
                 } else if (Game.creeps[i].memory.role === ROLE.BUILD) {
                     builderCount++;
-                } else if (Game.creeps[i].memory.role === ROLE.HAUL && Game.creeps[i].memory.source !== 3) {
+                } else if (Game.creeps[i].memory.role === ROLE.HAUL) {
                     haulerCount++;
                     haulSource = haulSource + parseInt(Game.creeps[i].memory.source, 10);
                 } else if (Game.creeps[i].memory.role === ROLE.SCOUT) {
@@ -32,24 +52,48 @@ var taskPopulate = {
             }
         }
 
-        if (harvesterCount < UNIT_MAX.HARVEST) {
-            console.log("harvest spawn " + spawnName);
-            var harvesterBodyParts = (energyCapacity <= 550 ? UNIT_BASIC.HARVEST : UNIT_MEDIUM.HARVEST);
+        if (harvesterCount < UNIT_MAX[spawnName].HARVEST) {
+            var harvesterBodyParts = UNIT[modifiedCapacity].HARVEST;
+            
+            if (harvesterCount === 0) {
+                if (energyAvailable >= 1300) {
+                    harvesterBodyParts = UNIT["1300"].HARVEST;
+                } else if (energyAvailable >= 800) {
+                    harvesterBodyParts = UNIT["800"].HARVEST;
+                } else if (energyAvailable >= 550) {
+                    harvesterBodyParts = UNIT["550"].HARVEST;
+                } else {
+                    harvesterBodyParts = UNIT["300"].HARVEST;
+                }
+            }
 
-            var res = Game.spawns[spawnName].createCreep((harvesterCount === 0 ? UNIT_BASIC.HARVEST : harvesterBodyParts), null, {
+            var res = Game.spawns[spawnName].createCreep((harvesterBodyParts), null, {
                 role: ROLE.HARVEST,
-                source: (harvesterSource < UNIT_MAX.HARVEST - ALT_SOURCE_OPEN_SPOTS ? 1 : 0),
+                source: (harvesterSource < UNIT_MAX[spawnName].HARVEST - ALT_SOURCE_OPEN_SPOTS ? 1 : 0),
                 in_colour: UNIT_COLOUR_IN.HARVEST,
                 out_colour: UNIT_COLOUR_OUT.HARVEST
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create harvester " + spawnName + " " + res);
+            }
+        } else if (haulerCount < UNIT_MAX[spawnName].HAUL) {
+            var haulerBodyParts = UNIT[modifiedCapacity].HAUL;
+
+            var res = Game.spawns[spawnName].createCreep(haulerBodyParts, null, {
+                role: ROLE.HAUL,
+                source: (spawnName === "Spawn2" ? 0 : (haulSource < 1 ? 1 : 0)),
+                in_colour: UNIT_COLOUR_IN.HAUL,
+                out_colour: UNIT_COLOUR_OUT.HAUL
             });
             
             console.log(res);
 
             if (typeof res === 'string') {
-                console.log("Create harvester " + res);
+                console.log("Create transferer " + spawnName + " " + res);
             }
-        } else if (upgraderCount < UNIT_MAX.UPGRADE) {
-            var upgraderBodyParts = (energyCapacity <= 550 ? UNIT_BASIC.UPGRADE : UNIT_MEDIUM.UPGRADE);
+        } else if (upgraderCount < UNIT_MAX[spawnName].UPGRADE) {
+            var upgraderBodyParts = UNIT[modifiedCapacity].UPGRADE;
 
             var res = Game.spawns[spawnName].createCreep(upgraderBodyParts, null, {
                 role: ROLE.UPGRADE,
@@ -59,10 +103,10 @@ var taskPopulate = {
             });
 
             if (typeof res === 'string') {
-                console.log("Create upgrader " + res);
+                console.log("Create upgrader " + spawnName + " " + res);
             }
-        } else if (builderCount < UNIT_MAX.BUILD) {
-            var builderBodyParts = (energyCapacity <= 550 ? UNIT_BASIC.BUILD : UNIT_MEDIUM.BUILD);
+        } else if (builderCount < UNIT_MAX[spawnName].BUILD) {
+            var builderBodyParts = UNIT[modifiedCapacity].BUILD;
 
             var res = Game.spawns[spawnName].createCreep(builderBodyParts, null, {
                 role: ROLE.BUILD,
@@ -72,23 +116,10 @@ var taskPopulate = {
             });
 
             if (typeof res === 'string') {
-                console.log("Create repairer " + res);
+                console.log("Create repairer " + spawnName + " " + res);
             }
-        } else if (haulerCount < UNIT_MAX.HAUL && spawnName !== "Spawn2") {
-            var haulerBodyParts = (energyCapacity <= 550 ? UNIT_BASIC.HAUL : UNIT_LARGE.HAUL);
-
-            var res = Game.spawns[spawnName].createCreep(haulerBodyParts, null, {
-                role: ROLE.HAUL,
-                source: (haulSource < 1 ? 1 : 0),
-                in_colour: UNIT_COLOUR_IN.HAUL,
-                out_colour: UNIT_COLOUR_OUT.HAUL
-            });
-
-            if (typeof res === 'string') {
-                console.log("Create transferer " + res);
-            }
-        } else if (scoutCount < UNIT_MAX.SCOUT && spawnName !== "Spawn2") {
-            var scoutBodyParts = (energyCapacity <= 550 ? UNIT_BASIC.SCOUT : UNIT_MEDIUM.SCOUT);
+        } else if (scoutCount < UNIT_MAX[spawnName].SCOUT && spawnName !== "Spawn2") {
+            var scoutBodyParts = UNIT[modifiedCapacity].SCOUT;
 
             var res = Game.spawns[spawnName].createCreep(scoutBodyParts, null, {
                 role: ROLE.SCOUT,
@@ -99,7 +130,7 @@ var taskPopulate = {
             });
 
             if (typeof res === 'string') {
-                console.log("Create scout " + res);
+                console.log("Create scout " + spawnName + " " + res);
             }
         }
     }

@@ -56,15 +56,11 @@ var taskWork = {
 
                     }
                 } else if (creep.memory.role === ROLE.HAUL) {
-                    roleTransferer.run(creep);
+                    roleTransferer.run(creep, spawnName);
                 } else if (creep.memory.role === ROLE.SCOUT) {
                     roleScout.poke(creep);
                 } else if (creep.memory.role === ROLE.SWARM) {
                     roleSwarm.swarm(creep);
-                } else if (creep.memory.role === "claim") {
-                    roleClaim.claim(creep);
-                } else if (creep.memory.role === "tempBuilder") {
-                    roleTempBuilder.build(creep);
                 }
             }
         }

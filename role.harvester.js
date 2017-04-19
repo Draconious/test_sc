@@ -3,9 +3,13 @@ var roleHarvester = {
     harvest: function(creep, spawnName) {
 	    if(creep.carry.energy < creep.carryCapacity) {
             var sources = creep.room.find(FIND_SOURCES);
-            if(creep.harvest(sources[creep.memory.source ? creep.memory.source : 0]) === ERR_NOT_IN_RANGE) {
+            
+            if (!creep.pos.isNearTo(sources[creep.memory.source ? creep.memory.source : 0])) {
                 creep.moveTo(sources[creep.memory.source ? creep.memory.source : 0], {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                return;
             }
+            
+            creep.harvest(sources[creep.memory.source ? creep.memory.source : 0]);
         } else {
             var target = null;
             var containers = creep.room.find(FIND_STRUCTURES, {
@@ -32,9 +36,15 @@ var roleHarvester = {
                     }
                 }
             }
-
-            if(target && creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+            
+            if (target) {
+                if (!creep.pos.isNearTo(target)){
+                    creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                    return;
+                }
+                creep.transfer(target, RESOURCE_ENERGY);
+            } else {
+                creep.moveTo(Game.spawns[spawnName], {visualizePathStyle: {stroke: creep.memory.out_colour}});
             }
 
         }
