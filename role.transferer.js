@@ -5,39 +5,39 @@ var roleTransferer = {
 
     /** @param {Creep} creep **/
     transfer: function (creep) {
-        if (_.sum(creep.carry) === 0 && !creep.memory.target) {
+        if (_.sum(creep.carry) === 0 && creep.carry.energy === 0 && !creep.memory.target) {
 
-            var energyAvailable = Game.rooms[creep.room.name].energyAvailable;
-            var energyCapacity = Game.rooms[creep.room.name].energyCapacityAvailable;
-
-            if (energyAvailable < energyCapacity) {
-                var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                    filter: (container) => {
-                        return (container.structureType === STRUCTURE_CONTAINER || container.structureType === STRUCTURE_STORAGE) && container.store[RESOURCE_ENERGY] > 0 && container.room.name === creep.room.name;
-                    }
-                });
-
-                if (container) {
-                    creep.memory.target = container.id;
+            var resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+                filter: (s) => {
+                    return (s.room.name === creep.room.name)
                 }
-
+            });
+            if (resource) {
+                creep.memory.target = resource.id;
             } else {
-                var resource = creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
-                    filter: (s) => {
-                        return (s.room.name === creep.room.name)
+
+                var energyAvailable = Game.rooms[creep.room.name].energyAvailable;
+                var energyCapacity = Game.rooms[creep.room.name].energyCapacityAvailable;
+                if (energyAvailable < energyCapacity) {
+                    var container = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (container) => {
+                            return (container.structureType === STRUCTURE_CONTAINER || container.structureType === STRUCTURE_STORAGE) && container.store[RESOURCE_ENERGY] > 0 && container.room.name === creep.room.name;
+                        }
+                    });
+
+                    if (container) {
+                        creep.memory.target = container.id;
                     }
-                });
-                if (resource) {
-                    creep.memory.target = resource.id;
+
                 } else {
 
-                    var sources = creep.room.find(FIND_SOURCES);
-                    var sourceContainers = sources[creep.memory.source ? creep.memory.source : 0].pos.findInRange(FIND_STRUCTURES, 5, {
-                        filter: (s) => (s.structureType === STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 && s.room.name === creep.room.name
+                    var sourceContainers = creep.room.find(FIND_STRUCTURES, {
+                        filter: (s) => (s.structureType === STRUCTURE_CONTAINER) && s.store[RESOURCE_ENERGY] > 0 && s.room.name === creep.room.name && SOURCE_CONTAINERS.includes(s.id)
                     });
 
                     if (sourceContainers && sourceContainers.length > 0) {
-                        creep.memory.target = sourceContainers[0].id;
+                        var highestContainer = _.max(sourceContainers, function(o){return o.store[RESOURCE_ENERGY];});
+                        creep.memory.target = highestContainer.id;
                     } else {
                         var storageContainer = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                             filter: (s) => (s.structureType === STRUCTURE_STORAGE) && s.store[RESOURCE_ENERGY] > 0 && s.room.name === creep.room.name
@@ -51,7 +51,7 @@ var roleTransferer = {
             }
         }
 
-        if (_.sum(creep.carry) === 0) {
+        if (_.sum(creep.carry) === 0 && creep.carry.energy === 0) {
             var target = Game.getObjectById(creep.memory.target);
 
             if (!target) {
@@ -63,8 +63,11 @@ var roleTransferer = {
                     }
                 } else {
                     if (target.store[RESOURCE_ENERGY] > 0) {
-                        if (creep.withdraw(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
+                        var res = creep.withdraw(target, RESOURCE_ENERGY);
+                        if (res === ERR_NOT_IN_RANGE) {
                             creep.moveTo(target, {visualizePathStyle: {stroke: creep.memory.in_colour}});
+                        } else if (res === OK && target instanceof StructureContainer) {
+                            RESOURCES_ALL.forEach(resourceType => creep.withdraw(lowestContainer, resourceType));
                         }
                     } else {
                         creep.memory.target = null;
@@ -72,7 +75,6 @@ var roleTransferer = {
                 }
             }
         } else {
-
             var target = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (structure) => {
                     return ((structure.structureType === STRUCTURE_EXTENSION || structure.structureType === STRUCTURE_SPAWN) && structure.energy < structure.energyCapacity && structure.room.name === creep.room.name);
@@ -88,21 +90,31 @@ var roleTransferer = {
                     return;
                 }
             } else {
+                var lowestContainer;
 
-                var containers;
+                if (_.sum(creep.carry) !== creep.carry.energy) {
+                    lowestContainer = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                        filter: (container) => {
+                            return (container.structureType === STRUCTURE_STORAGE) && container.store[RESOURCE_ENERGY] < container.storeCapacity && container.room.name === creep.room.name;
+                        }
+                    });
+                }
 
-                containers = creep.room.find(FIND_STRUCTURES, {
-                    filter: (container) => {
-                        return (container.structureType === STRUCTURE_CONTAINER || container.structureType === STRUCTURE_STORAGE) && container.store[RESOURCE_ENERGY] < container.storeCapacity && !SOURCE_CONTAINERS.includes(container.id) && container.room.name === creep.room.name;
-                    }
-                });
+                if (!lowestContainer) {
 
-                var lowestContainer = _.min(containers, function(o){return o.store[RESOURCE_ENERGY];});
+                    var containers = creep.room.find(FIND_STRUCTURES, {
+                        filter: (container) => {
+                            return (container.structureType === STRUCTURE_CONTAINER || container.structureType === STRUCTURE_STORAGE) && _.sum(container.store) < container.storeCapacity && !SOURCE_CONTAINERS.includes(container.id) && container.room.name === creep.room.name;
+                        }
+                    });
+
+                    lowestContainer = _.min(containers, function(o){return o.store[RESOURCE_ENERGY];});
+                }
 
                 var res = creep.transfer(lowestContainer, RESOURCE_ENERGY);
                 if (res === ERR_NOT_IN_RANGE) {
                     creep.moveTo(lowestContainer);
-                } else if (res === OK) {
+                } else if ((res === OK || res === ERR_NOT_ENOUGH_ENERGY) && lowestContainer instanceof StructureStorage) {
                     RESOURCES_ALL.forEach(resourceType => creep.transfer(lowestContainer, resourceType));
                     creep.memory.target = null;
                     return;

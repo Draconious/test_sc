@@ -13,7 +13,7 @@ var roleRepairer = {
             taskGetEnergy.run(creep);
         } else {
             if (!creep.memory.targetId) {
-                var structure = creep.pos.findClosestByRange(FIND_CONSTRUCTION_SITES);
+                var structure = creep.pos.findClosestByRange(FIND_MY_CONSTRUCTION_SITES);
 
                 if (structure) {
                     creep.memory.targetId = structure.id;

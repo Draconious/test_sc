@@ -13,51 +13,41 @@ module.exports.loop = function () {
 
     for (var index in MY_ROOMS) {
         var roomName = MY_ROOMS[index];
-        var spawnName;
+        tower.defend(roomName);
 
-        for (var i in Game.spawns) {
-            if (Game.spawns[i].room.name === roomName) {
-                spawnName = Game.spawns[i].name;
-            }
-        }
+        var spawns = Game.rooms[MY_ROOMS[index]].find(FIND_MY_SPAWNS);
 
-        if (spawnName) {
-            tower.defend(roomName);
+        var energyAvailable = Game.rooms[roomName].energyAvailable;
+        var energyCapacity = Game.rooms[roomName].energyCapacityAvailable;
 
-            var energyAvailable = Game.rooms[roomName].energyAvailable;
-            var energyCapacity = Game.rooms[roomName].energyCapacityAvailable;
-            if (!Game.spawns[spawnName].spawning && energyAvailable >= 300) {
-                taskPopulate.run(energyAvailable, energyCapacity, spawnName, roomName);
-            }
+        for (var i in spawns) {
+            if (Game.spawns[i]) {
 
-            var harvesters = 0;
-            var upgraders = 0;
-            var repairers = 0;
-            var transferers = 0;
-            var scouts = 0;
+                if (!Game.spawns[i].spawning && energyAvailable >= 300) {
+                    taskPopulate.populate(energyAvailable, energyCapacity, Game.spawns[i].name, roomName);
 
-            for (var i in Game.creeps) {
-                if (Game.creeps[i].room.name === roomName) {
-                    if (Game.creeps[i].memory.role === ROLE.HARVEST) {
-                        harvesters++;
-                    } else if (Game.creeps[i].memory.role === ROLE.UPGRADE) {
-                        upgraders++;
-                    } else if (Game.creeps[i].memory.role === ROLE.BUILD) {
-                        repairers++;
-                    } else if (Game.creeps[i].memory.role === ROLE.HAUL) {
-                        transferers++;
-                    } else if (Game.creeps[i].memory.role === ROLE.SCOUT) {
-                        scouts++;
+                    if (Game.spawns[i].memory.remoteRooms && Game.spawns[i].memory.remoteRooms.length > 0) {
+                        for (var index in Game.spawns[i].memory.remoteRooms) {
+                            var ticksToEnd = 9999;
+
+                            if (Game.rooms[Game.spawns[i].memory.remoteRooms[index]]) {
+                                if (Game.rooms[Game.spawns[i].memory.remoteRooms[index]].controller.reservation) {
+                                    ticksToEnd = Game.rooms[Game.spawns[i].memory.remoteRooms[index]].controller.reservation.ticksToEnd;
+                                } else {
+                                    ticksToEnd = 0;
+                                }
+                            }
+
+                            if (energyAvailable >= 300) {
+                                taskPopulate.populateRemote(energyAvailable, energyCapacity, Game.spawns[i].name, roomName, Game.spawns[i].memory.remoteRooms[index], ticksToEnd);
+                            }
+                        }
                     }
                 }
             }
-
-            if (harvesters < UNIT_MAX[spawnName].HARVEST) {
-                console.log("Brain drain in " + roomName + "!!");
-            }
-
-            taskWork.run(harvesters < UNIT_MAX[spawnName].HARVEST, roomName, spawnName);
         }
     }
+
+    taskWork.work();
 
 };

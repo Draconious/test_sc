@@ -42,7 +42,7 @@ var roleScout = {
                     }
                 }
             }
-            creep.moveTo(new RoomPosition(10, 38, creep.memory.scoutRooms[0]));
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.scoutRooms[0]));
         }
     },
     
@@ -87,8 +87,7 @@ var roleScout = {
                     }
                 }
             }
-            creep.moveTo(new RoomPosition(42, 0, creep.memory.scoutRooms[0]));
-            //creep.moveTo(new RoomPosition(24, 1, creep.memory.scoutRooms[0]));
+            creep.moveTo(new RoomPosition(25, 25, creep.memory.scoutRooms[0]));
         }
     }
 };

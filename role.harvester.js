@@ -1,6 +1,6 @@
 var roleHarvester = {
 
-    harvest: function(creep, spawnName) {
+    harvest: function(creep) {
 	    if(creep.carry.energy < creep.carryCapacity) {
             var sources = creep.room.find(FIND_SOURCES);
             
@@ -21,8 +21,15 @@ var roleHarvester = {
             if (containers && containers.length > 0) {
                 target = creep.pos.findClosestByRange(containers);
             } else {
-                if (Game.spawns[spawnName].energy < Game.spawns[spawnName].energyCapacity) {
-                    target = Game.spawns[spawnName];
+
+                var lowSpawns = creep.room.find(FIND_MY_SPAWNS, {
+                    filter: (spawn) => {
+                        return spawn.energy < spawn.storeCapacity;
+                    }
+                });
+
+                if (lowSpawns && lowSpawns.length > 0) {
+                    target = lowSpawns[0];
                 } else {
 
                     var structures = creep.room.find(FIND_STRUCTURES, {
@@ -43,10 +50,68 @@ var roleHarvester = {
                     return;
                 }
                 creep.transfer(target, RESOURCE_ENERGY);
-            } else {
-                creep.moveTo(Game.spawns[spawnName], {visualizePathStyle: {stroke: creep.memory.out_colour}});
             }
 
+        }
+	},
+
+    remoteHarvest: function(creep) {
+
+        var remoteRoomName = creep.memory.roomName;
+
+        if (creep.carry.energy === 0) {
+            creep.memory.targetId = null;
+        }
+
+        if (!creep.memory.targetId && creep.carry.energy < creep.carryCapacity) {
+            if (creep.room.name !== remoteRoomName) {
+                creep.moveTo(new RoomPosition(25,25, remoteRoomName), {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                return;
+            }
+            var source = creep.pos.findClosestByPath(FIND_SOURCES);
+
+            if (!creep.pos.isNearTo(source)) {
+                creep.moveTo(source, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                return;
+            }
+
+            creep.harvest(source);
+        } else {
+            if (Game.rooms[remoteRoomName]) {
+                var buildSite;
+
+                if (creep.memory.targetId) {
+                    buildSite = Game.getObjectById(creep.memory.targetId)
+                }
+
+                if (!buildSite) {
+                    var constructions = Game.rooms[remoteRoomName].find(FIND_MY_CONSTRUCTION_SITES);
+                    if (constructions) {
+
+                        buildSite = creep.pos.findClosestByPath(constructions);
+                        if (buildSite) {
+                            creep.memory.targetId = buildSite.id;
+                        } else {
+                            creep.memory.targetId = null;
+                        }
+
+                    }
+                }
+
+                if (buildSite) {
+                    if (creep.build(buildSite) === ERR_NOT_IN_RANGE) {
+                        creep.moveTo(buildSite, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                    }
+                    return;
+                }
+            }
+
+            if (creep.room.name !== creep.memory.spawnRoom) {
+                creep.moveTo(new RoomPosition(25,25, creep.memory.spawnRoom), {visualizePathStyle: {stroke: creep.memory.out_colour}});
+                return;
+            }
+
+            this.harvest(creep);
         }
 	}
 };

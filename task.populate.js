@@ -2,7 +2,7 @@ var my_constants = require('my_constants');
 
 var taskPopulate = {
 
-    run: function (energyAvailable, energyCapacity, spawnName, roomName) {
+    populate: function (energyAvailable, energyCapacity, spawnName, roomName) {
         var modifiedCapacity = 0;
         
         if (energyAvailable >= 12900) {
@@ -86,8 +86,6 @@ var taskPopulate = {
                 in_colour: UNIT_COLOUR_IN.HAUL,
                 out_colour: UNIT_COLOUR_OUT.HAUL
             });
-            
-            console.log(res);
 
             if (typeof res === 'string') {
                 console.log("Create transferer " + spawnName + " " + res);
@@ -133,7 +131,74 @@ var taskPopulate = {
                 console.log("Create scout " + spawnName + " " + res);
             }
         }
+    },
+
+    populateRemote: function (energyAvailable, energyCapacity, spawnName, roomName, remoteRoomName, ticksToEnd) {
+        var modifiedCapacity = 0;
+
+        if (energyAvailable >= 12900) {
+            modifiedCapacity = "12900";
+        } else if (energyAvailable >= 5600) {
+            modifiedCapacity = "5600";
+        } else if (energyAvailable >= 2300) {
+            modifiedCapacity = "2300";
+        } else if (energyAvailable >= 1800) {
+            modifiedCapacity = "1800";
+        } else if (energyAvailable >= 1300) {
+            modifiedCapacity = "1300";
+        } else if (energyAvailable >= 800) {
+            modifiedCapacity = "800";
+        } else if (energyAvailable >= 550) {
+            modifiedCapacity = "550";
+        } else {
+            modifiedCapacity = "300";
+        }
+
+        var reserverCount = 0;
+        var harvesterCount = 0;
+
+        for (var i in Game.creeps) {
+            if (Game.creeps[i].room.name === roomName || Game.creeps[i].room.name === remoteRoomName) {
+                if (Game.creeps[i].memory.role === ROLE.REMOTE_RESERVE) {
+                    reserverCount++;
+                } else if (Game.creeps[i].memory.role === ROLE.REMOTE_HARVEST) {
+                    harvesterCount++;
+                }
+            }
+        }
+
+        if (reserverCount < UNIT_MAX[spawnName].REMOTE_RESERVE && ticksToEnd < 2500) {
+            var reserveBodyParts = UNIT[modifiedCapacity].REMOTE_RESERVE;
+
+            var res = Game.spawns[spawnName].createCreep((reserveBodyParts), null, {
+                role: ROLE.REMOTE_RESERVE,
+                room: remoteRoomName,
+                spawnRoom: roomName,
+                in_colour: UNIT_COLOUR_IN.HAUL,
+                out_colour: UNIT_COLOUR_OUT.HAUL
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create remote reserver " + spawnName + " " + res + " " + roomName);
+            }
+        } else if (harvesterCount < UNIT_MAX[spawnName].REMOTE_HARVEST) {
+            var harvestBodyParts = UNIT[modifiedCapacity].HARVEST;
+
+            var res = Game.spawns[spawnName].createCreep(harvestBodyParts, null, {
+                role: ROLE.REMOTE_HARVEST,
+                room: remoteRoomName,
+                spawnRoom: roomName,
+                in_colour: UNIT_COLOUR_IN.HARVEST,
+                out_colour: UNIT_COLOUR_OUT.HARVEST
+            });
+
+            if (typeof res === 'string') {
+                console.log("Create remote harvester " + spawnName + " " + res + " " + roomName);
+            }
+        }
+
     }
+
 };
 
 module.exports = taskPopulate;
