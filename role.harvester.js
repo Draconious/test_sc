@@ -57,7 +57,7 @@ var roleHarvester = {
 
     remoteHarvest: function(creep) {
 
-        var remoteRoomName = creep.memory.roomName;
+        var remoteRoomName = creep.memory.room;
 
         if (creep.carry.energy === 0) {
             creep.memory.targetId = null;
