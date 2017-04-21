@@ -89,6 +89,35 @@ var roleScout = {
             }
             creep.moveTo(new RoomPosition(25, 25, creep.memory.scoutRooms[0]));
         }
+    },
+
+    /** @param {Creep} creep **/
+    remoteDefend: function (creep) {
+        if (creep.room.name !== creep.memory.room) {
+            creep.moveTo(new RoomPosition(25,25, creep.memory.room), {visualizePathStyle: {stroke: creep.memory.in_colour}});
+            return;
+        }
+
+        var hostiles = Game.rooms[creep.room.name].find(FIND_HOSTILE_CREEPS, {
+            filter: (creep) => (MY_FRIENDS.indexOf(creep.owner.username) === -1)
+        });
+
+        if (hostiles && hostiles.length > 0) {
+            var nearestHostile = creep.pos.findClosestByPath(hostiles);
+
+            creep.moveTo(nearestHostile, {visualizePathStyle: {stroke: creep.memory.out_colour}});
+
+            var rangedBody = creep.getActiveBodyparts(RANGED_ATTACK);
+            if (rangedBody && rangedBody.length > 0) {
+                creep.rangedAttack(nearestHostile);
+            }
+
+            var attackBody = creep.getActiveBodyparts(ATTACK);
+            if (attackBody && attackBody.length > 0) {
+                creep.attack(nearestHostile);
+            }
+        }
+
     }
 };
 

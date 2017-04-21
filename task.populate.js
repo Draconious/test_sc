@@ -156,6 +156,7 @@ var taskPopulate = {
 
         var reserverCount = 0;
         var harvesterCount = 0;
+        var defenderCount = 0;
 
         for (var i in Game.creeps) {
             if (Game.creeps[i].room.name === roomName || Game.creeps[i].room.name === remoteRoomName) {
@@ -163,6 +164,8 @@ var taskPopulate = {
                     reserverCount++;
                 } else if (Game.creeps[i].memory.role === ROLE.REMOTE_HARVEST) {
                     harvesterCount++;
+                } else if (Game.creeps[i].memory.role === ROLE.REMOTE_DEFEND) {
+                    defenderCount++;
                 }
             }
         }
@@ -170,30 +173,50 @@ var taskPopulate = {
         if (reserverCount < UNIT_MAX[spawnName].REMOTE_RESERVE && ticksToEnd < 2500) {
             var reserveBodyParts = UNIT[modifiedCapacity].REMOTE_RESERVE;
 
-            var res = Game.spawns[spawnName].createCreep((reserveBodyParts), null, {
-                role: ROLE.REMOTE_RESERVE,
-                room: remoteRoomName,
-                spawnRoom: roomName,
-                in_colour: UNIT_COLOUR_IN.HAUL,
-                out_colour: UNIT_COLOUR_OUT.HAUL
-            });
+            if (reserveBodyParts) {
+                var res = Game.spawns[spawnName].createCreep((reserveBodyParts), null, {
+                    role: ROLE.REMOTE_RESERVE,
+                    room: remoteRoomName,
+                    spawnRoom: roomName,
+                    in_colour: UNIT_COLOUR_IN.HAUL,
+                    out_colour: UNIT_COLOUR_OUT.HAUL
+                });
 
-            if (typeof res === 'string') {
-                console.log("Create remote reserver " + spawnName + " " + res + " " + roomName);
+                if (typeof res === 'string') {
+                    console.log("Create remote reserver " + spawnName + " " + res + " " + roomName);
+                }
             }
         } else if (harvesterCount < UNIT_MAX[spawnName].REMOTE_HARVEST) {
             var harvestBodyParts = UNIT[modifiedCapacity].HARVEST;
 
-            var res = Game.spawns[spawnName].createCreep(harvestBodyParts, null, {
-                role: ROLE.REMOTE_HARVEST,
-                room: remoteRoomName,
-                spawnRoom: roomName,
-                in_colour: UNIT_COLOUR_IN.HARVEST,
-                out_colour: UNIT_COLOUR_OUT.HARVEST
-            });
+            if (harvestBodyParts) {
+                var res = Game.spawns[spawnName].createCreep(harvestBodyParts, null, {
+                    role: ROLE.REMOTE_HARVEST,
+                    room: remoteRoomName,
+                    spawnRoom: roomName,
+                    in_colour: UNIT_COLOUR_IN.HARVEST,
+                    out_colour: UNIT_COLOUR_OUT.HARVEST
+                });
 
-            if (typeof res === 'string') {
-                console.log("Create remote harvester " + spawnName + " " + res + " " + roomName);
+                if (typeof res === 'string') {
+                    console.log("Create remote harvester " + spawnName + " " + res + " " + roomName);
+                }
+            }
+        } else if (defenderCount < UNIT_MAX[spawnName].REMOTE_DEFEND) {
+            var defenderBodyParts = UNIT[modifiedCapacity].REMOTE_DEFEND;
+
+            if (defenderBodyParts) {
+                var res = Game.spawns[spawnName].createCreep(defenderBodyParts, null, {
+                    role: ROLE.REMOTE_DEFEND,
+                    room: remoteRoomName,
+                    spawnRoom: roomName,
+                    in_colour: UNIT_COLOUR_IN.HARVEST,
+                    out_colour: UNIT_COLOUR_OUT.HARVEST
+                });
+
+                if (typeof res === 'string') {
+                    console.log("Create remote defender " + spawnName + " " + res + " " + roomName);
+                }
             }
         }
 

@@ -57,16 +57,14 @@ var taskWork = {
                 } else {
                     roleWarrior.scout(creep);
                 }
-            } else if (creep.memory.role === ROLE.DEFEND) {
-                roleSwarm.defend(creep);
             } else if (creep.memory.role === ROLE.SWARM) {
                 roleSwarm.swarm(creep);
-            } else if (creep.memory.role === "tempBuilder") {
-                roleTempBuilder.build(creep);
             } else if (creep.memory.role === ROLE.REMOTE_RESERVE) {
                 roleReserver.remoteReserve(creep);
             } else if (creep.memory.role === ROLE.REMOTE_HARVEST) {
                 roleHarvester.remoteHarvest(creep);
+            } else if (creep.memory.role === ROLE.REMOTE_DEFEND) {
+                roleWarrior.remoteDefend(creep);
             }
         }
     }
